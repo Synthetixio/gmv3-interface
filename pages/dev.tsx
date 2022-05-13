@@ -1,5 +1,5 @@
 import { DeployedModules } from 'containers/Modules/Modules';
-import useNominationHistoryForWalletQuery from 'queries/nomination/useNominationHistoryForWalletQuery';
+import useNominationHistoryForWalletQuery from 'queries/historical/useNominationHistoryForWalletQuery';
 
 export default function Dev() {
 	const history = useNominationHistoryForWalletQuery(

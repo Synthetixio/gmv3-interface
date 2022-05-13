@@ -14,7 +14,7 @@ function useNominationHistoryForWalletQuery(
 		async () => {
 			const contract = governanceModules[moduleInstance]?.contract;
 
-			const events = contract.filters.CandidateNominated();
+			const events = contract.filters.CandidateNominated(walletAddress);
 
 			return events;
 		},
