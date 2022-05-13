@@ -2,19 +2,16 @@ import { useQuery } from 'react-query';
 import Modules from 'containers/Modules';
 import { DeployedModules } from 'containers/Modules/Modules';
 
-// @notice - this query is used to get the entire nomination history for a body per wallet
-function useNominationHistoryForWalletQuery(
-	moduleInstance: DeployedModules,
-	walletAddress: string
-) {
+// @notice - this query is used to get the entire vote history for a body per wallet
+function useVoteHistoryForWalletQuery(moduleInstance: DeployedModules, walletAddress: string) {
 	const { governanceModules } = Modules.useContainer();
 
 	return useQuery<any>(
-		['nominationHistoryForWallet', moduleInstance],
+		['voteHistoryForWallet', moduleInstance],
 		async () => {
 			const contract = governanceModules[moduleInstance]?.contract;
 
-			const events = contract.filters.CandidateNominated(walletAddress);
+			const events = contract.filters.VoteRecorded(walletAddress);
 
 			return events;
 		},
@@ -24,4 +21,4 @@ function useNominationHistoryForWalletQuery(
 	);
 }
 
-export default useNominationHistoryForWalletQuery;
+export default useVoteHistoryForWalletQuery;
