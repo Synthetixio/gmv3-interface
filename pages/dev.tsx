@@ -1,13 +1,49 @@
 import { DeployedModules } from 'containers/Modules/Modules';
-import useNominationHistoryForWalletQuery from 'queries/historical/useNominationHistoryForWalletQuery';
+import useCouncilMemberHistoryQuery from 'queries/historical/useCouncilMemberHistoryQuery';
+import useNominationHistoryQuery from 'queries/historical/useNominationHistoryQuery';
+import useVoteHistoryQuery from 'queries/historical/useVoteHistoryQuery';
 
 export default function Dev() {
-	const history = useNominationHistoryForWalletQuery(
-		DeployedModules.SPARTAN_COUNCIL,
-		'0x9b395C336FF7FeEb99F057e66185b34Cf82A9DF6'
+	const nomination = useNominationHistoryQuery(DeployedModules.SPARTAN_COUNCIL);
+	const votes = useVoteHistoryQuery(DeployedModules.SPARTAN_COUNCIL);
+	const members = useCouncilMemberHistoryQuery(DeployedModules.SPARTAN_COUNCIL);
+
+	return (
+		<div style={{ color: 'white' }}>
+			<h1>Nominees</h1>
+			{nomination.data &&
+				nomination.data.map((e, i) => {
+					return (
+						<li key={i}>
+							<ul>Nominee: {e}</ul>
+							<hr />
+						</li>
+					);
+				})}
+			<p>------</p>
+			<h1>Votes</h1>
+			{votes.data &&
+				votes.data.map((e, i) => {
+					return (
+						<li key={i}>
+							<ul>Voter: {e.voter}</ul>
+							<ul>BallotId: {e.ballotId}</ul>
+							<ul>Voting Power: {Number(e.voterPower)}</ul>
+							<hr />
+						</li>
+					);
+				})}
+			<p>------</p>
+			<h1>Members</h1>
+			{members.data &&
+				members.data.map((e, i) => {
+					return (
+						<li key={i}>
+							<ul>Member: {e}</ul>
+							<hr />
+						</li>
+					);
+				})}
+		</div>
 	);
-
-	console.log(history);
-
-	return <>Go for it here</>;
 }

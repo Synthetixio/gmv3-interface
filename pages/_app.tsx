@@ -1,5 +1,6 @@
 import { AppProps } from 'next/app';
 import { FC } from 'react';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { DAppProvider, Config, Hardhat, Mainnet } from '@usedapp/core';
@@ -51,6 +52,7 @@ const App: FC<AppProps> = (props) => {
 		<DAppProvider config={config}>
 			<Connector.Provider>
 				<QueryClientProvider client={queryClient}>
+					<ReactQueryDevtools initialIsOpen={false} />
 					<ThemeProvider theme={theme}>
 						<Modal.Provider>
 							<InnerApp {...props} />
