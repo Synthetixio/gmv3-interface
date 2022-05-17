@@ -12,22 +12,22 @@ type VoteEvent = {
 /**
  * 	Query Vote and Vote Withdrawn Events from Solidity Contracts
  *
- *	event VoteRecorded(address indexed voter, bytes32 indexed ballotId, uint votePower);
- *  event VoteWithdrawn(address indexed voter, bytes32 indexed ballotId, uint votePower);
+ *	event VoteRecorded(address indexed voter, bytes32 indexed ballotId, uint indexed epochIndex, uint votePower);
+ *	event VoteWithdrawn(address indexed voter, bytes32 indexed ballotId, uint indexed epochIndex, uint votePower);
  *
  * @param {DeployedModules} moduleInstance The smart contract instance of the governance body to query
- * @param {string} [voter] If needed, a specific wallets voting history can be queried
- * @param {string} [ballotId] If needed, we can query for a particular ballotId
- * @param {string} [epochIndex] If needed, we can query for a particular epoch
+ * @param {string | null} voter If needed, a specific wallets voting history can be queried
+ * @param {string | null} ballotId If needed, we can query for a particular ballotId
+ * @param {string | null} epochIndex If needed, we can query for a particular epoch
  * @return {string[]} A list of votes
  */
 
 // @notice - this query is used to get the entire vote history for a body per wallet
 function useVoteHistoryQuery(
 	moduleInstance: DeployedModules,
-	voter?: string,
-	ballotId?: string,
-	epochIndex?: string
+	voter: string | null,
+	ballotId: string | null,
+	epochIndex: string | null
 ) {
 	const { governanceModules } = Modules.useContainer();
 
@@ -36,7 +36,6 @@ function useVoteHistoryQuery(
 		async () => {
 			const contract = governanceModules[moduleInstance]?.contract as ethers.Contract;
 
-			// @TODO: add custom filtering here
 			const voteFilter = contract.filters.VoteRecorded();
 			const voteWithdrawnFilter = contract.filters.VoteWithdrawn();
 

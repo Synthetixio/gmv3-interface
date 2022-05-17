@@ -4,13 +4,13 @@ import useNominationHistoryQuery from 'queries/historical/useNominationHistoryQu
 import useVoteHistoryQuery from 'queries/historical/useVoteHistoryQuery';
 
 export default function Dev() {
-	const nomination = useNominationHistoryQuery(DeployedModules.SPARTAN_COUNCIL);
-	const votes = useVoteHistoryQuery(DeployedModules.SPARTAN_COUNCIL);
-	const members = useCouncilMemberHistoryQuery(DeployedModules.SPARTAN_COUNCIL);
+	// const nomination = useNominationHistoryQuery(DeployedModules.SPARTAN_COUNCIL);
+	// const votes = useVoteHistoryQuery(DeployedModules.SPARTAN_COUNCIL);
+	const members = useCouncilMemberHistoryQuery(DeployedModules.SPARTAN_COUNCIL, null, '3');
 
 	return (
 		<div style={{ color: 'white' }}>
-			<h1>Nominees</h1>
+			{/* <h1>Nominees</h1>
 			{nomination.data &&
 				nomination.data.map((e, i) => {
 					return (
@@ -32,7 +32,7 @@ export default function Dev() {
 							<hr />
 						</li>
 					);
-				})}
+				})} */}
 			<p>------</p>
 			<h1>Members</h1>
 			{members.data &&
