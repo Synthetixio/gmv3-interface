@@ -22,7 +22,6 @@ type VoteEvent = {
  * @return {string[]} A list of votes
  */
 
-// @notice - this query is used to get the entire vote history for a body per wallet
 function useVoteHistoryQuery(
 	moduleInstance: DeployedModules,
 	voter: string | null,
@@ -30,14 +29,21 @@ function useVoteHistoryQuery(
 	epochIndex: string | null
 ) {
 	const { governanceModules } = Modules.useContainer();
-
 	return useQuery<VoteEvent[]>(
 		['voteHistory', moduleInstance, voter, ballotId, epochIndex],
 		async () => {
 			const contract = governanceModules[moduleInstance]?.contract as ethers.Contract;
 
-			const voteFilter = contract.filters.VoteRecorded();
-			const voteWithdrawnFilter = contract.filters.VoteWithdrawn();
+			const voteFilter = contract.filters.VoteRecorded(
+				voter ?? null,
+				ballotId ?? null,
+				epochIndex ? ethers.BigNumber.from(epochIndex).toHexString() : null
+			);
+			const voteWithdrawnFilter = contract.filters.VoteWithdrawn(
+				voter ?? null,
+				ballotId ?? null,
+				epochIndex ? ethers.BigNumber.from(epochIndex).toHexString() : null
+			);
 
 			const voteEvents = await contract.queryFilter(voteFilter);
 			const voteWithdrawnEvents = await contract.queryFilter(voteWithdrawnFilter);

@@ -203,6 +203,12 @@
 					"internalType": "address",
 					"name": "member",
 					"type": "address"
+				},
+				{
+					"indexed": true,
+					"internalType": "uint256",
+					"name": "epochIndex",
+					"type": "uint256"
 				}
 			],
 			"name": "CouncilMemberRemoved",

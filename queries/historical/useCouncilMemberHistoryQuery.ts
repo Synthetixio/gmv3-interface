@@ -4,10 +4,10 @@ import { DeployedModules } from 'containers/Modules/Modules';
 import { ethers } from 'ethers';
 
 /**
- * Query Council Member Added and Council Member Removed Events from Solidity Contracts
+ * 	Query Council Member Added and Council Member Removed Events from Solidity Contracts
  *
  *  event CouncilMemberAdded(address indexed member, uint indexed epochIndex);
- * event CouncilMemberRemoved(address indexed member, uint indexed epochIndex));
+ * 	event CouncilMemberRemoved(address indexed member, uint indexed epochIndex));
  *
  * @param {DeployedModules} moduleInstance The smart contract instance of the governance body to query
  * @param {string | null} member If needed, a specific wallets nomination history can be queried
@@ -20,8 +20,6 @@ function useCouncilMemberHistoryQuery(
 	epochIndex: string | null
 ) {
 	const { governanceModules } = Modules.useContainer();
-
-	// @TODO: make generic enough so we can query entire history, per wallet and per epochIndex
 	return useQuery<string[]>(
 		['councilMemberHistory', moduleInstance, member, epochIndex],
 		async () => {
@@ -31,13 +29,13 @@ function useCouncilMemberHistoryQuery(
 				member ?? null,
 				epochIndex ? ethers.BigNumber.from(epochIndex).toHexString() : null
 			);
-			// const memberRemovedFilter = contract.filters.CouncilMemberRemoved(
-			// 	member ?? null,
-			// 	epochIndex ? ethers.BigNumber.from(epochIndex).toHexString() : null
-			// );
+			const memberRemovedFilter = contract.filters.CouncilMemberRemoved(
+				member ?? null,
+				epochIndex ? ethers.BigNumber.from(epochIndex).toHexString() : null
+			);
 
 			const addedEvents = await contract.queryFilter(memberAddedFilter);
-			// const removedEvents = await contract.queryFilter(memberRemovedFilter);
+			const removedEvents = await contract.queryFilter(memberRemovedFilter);
 
 			let councilMembers = [] as string[];
 
@@ -45,11 +43,11 @@ function useCouncilMemberHistoryQuery(
 				councilMembers.push(event.args?.member);
 			});
 
-			// removedEvents.forEach((event: ethers.Event) => {
-			// 	if (councilMembers.includes(event.args?.member)) {
-			// 		councilMembers.splice(councilMembers.indexOf(event.args?.member), 1);
-			// 	}
-			// });
+			removedEvents.forEach((event: ethers.Event) => {
+				if (councilMembers.includes(event.args?.member)) {
+					councilMembers.splice(councilMembers.indexOf(event.args?.member), 1);
+				}
+			});
 
 			return councilMembers;
 		},

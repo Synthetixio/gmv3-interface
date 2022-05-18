@@ -4,32 +4,36 @@ import { DeployedModules } from 'containers/Modules/Modules';
 import { ethers } from 'ethers';
 
 /**
- * Query Nomination and Withdraw Nomination Events from Solidity Contracts
+ * 	Query Nomination and Withdraw Nomination Events from Solidity Contracts
  *
- * event CandidateNominated(address indexed candidate);
- * event NominationWithdrawn(address indexed candidate);
+ * 	event CandidateNominated(address indexed candidate, uint indexed epochIndex);
+ *	event NominationWithdrawn(address indexed candidate, uint indexed epochIndex);
  *
  * @param {DeployedModules} moduleInstance The smart contract instance of the governance body to query
- * @param {string} [candidate] If needed, a specific wallets nomination history can be queried
- * @param {string} [epochIndex] If needed, we can select a specific epoch to query
+ * @param {string | null} candidate If needed, a specific wallets nomination history can be queried
+ * @param {string | null} epochIndex If needed, we can select a specific epoch to query
  * @return {string[]} A list of addresses
  */
 function useNominationHistoryQuery(
 	moduleInstance: DeployedModules,
-	candidate?: string,
-	epochIndex?: string
+	candidate: string | null,
+	epochIndex: string | null
 ) {
 	const { governanceModules } = Modules.useContainer();
-
-	// @TODO: make generic enough so we can query entire history, per wallet and per epochIndex
 	return useQuery<string[]>(
 		['nominationHistory', moduleInstance, candidate, epochIndex],
 		async () => {
 			const contract = governanceModules[moduleInstance]?.contract as ethers.Contract;
 
 			// @TODO: add custom filtering here
-			const nominationFilter = contract.filters.CandidateNominated(candidate ?? null);
-			const withdrawNominationFilter = contract.filters.NominationWithdrawn(candidate ?? null);
+			const nominationFilter = contract.filters.CandidateNominated(
+				candidate ?? null,
+				epochIndex ? ethers.BigNumber.from(epochIndex).toHexString() : null
+			);
+			const withdrawNominationFilter = contract.filters.NominationWithdrawn(
+				candidate ?? null,
+				epochIndex ? ethers.BigNumber.from(epochIndex).toHexString() : null
+			);
 
 			const nominationEvents = await contract.queryFilter(nominationFilter);
 			const withdrawNominationEvents = await contract.queryFilter(withdrawNominationFilter);
