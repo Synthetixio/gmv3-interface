@@ -25,7 +25,6 @@ function useNominationHistoryQuery(
 		async () => {
 			const contract = governanceModules[moduleInstance]?.contract as ethers.Contract;
 
-			// @TODO: add custom filtering here
 			const nominationFilter = contract.filters.CandidateNominated(
 				candidate ?? null,
 				epochIndex ? ethers.BigNumber.from(epochIndex).toHexString() : null
