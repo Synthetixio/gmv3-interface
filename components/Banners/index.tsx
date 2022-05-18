@@ -1,5 +1,5 @@
-import { Flex, theme } from '@synthetixio/ui';
-import { Colors } from '@synthetixio/ui/dist/esm/types';
+import { Flex, theme } from 'components/old-ui';
+import { Colors } from 'components/old-ui/dist/esm/types';
 import styled from 'styled-components';
 
 export const Banner = styled(Flex)<{
@@ -12,7 +12,9 @@ export const Banner = styled(Flex)<{
 	}};
 	width: 100%;
 	padding: ${({ theme }) => theme.spacings.tiny};
-	color: ${({ theme }) => theme.colors.black}; ;
+	color: ${({ theme }) => theme.colors.black};
+	position: absolute;
+	top: 0px;
 `;
 
 export const BannerText = styled.h3`

@@ -1,4 +1,4 @@
-import { Button, IconButton, SettingsIcon, SNXIcon, SpotlightButton, theme } from '@synthetixio/ui';
+import { Button, IconButton, SettingsIcon, SNXIcon, SpotlightButton, theme } from 'components/old-ui';
 import Connector from 'containers/Connector';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -13,13 +13,7 @@ export default function Header() {
 	const { connectWallet, disconnectWallet, walletAddress, ensAvatar, ensName } =
 		Connector.useContainer();
 
-	const routes = [
-		t('header.routes.home'),
-		t('header.routes.elections'),
-		t('header.routes.sips'),
-		t('header.routes.discuss'),
-		t('header.routes.vote'),
-	];
+	const routes = [t('header.routes.home'), t('header.routes.councils'), t('header.routes.vote')];
 
 	const handleIndexAndRouteChange = (index: number) => {
 		push(index === 0 ? '/' : routes[index].toLowerCase());

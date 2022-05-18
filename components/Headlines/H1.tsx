@@ -6,5 +6,5 @@ export const H1 = styled.h1`
 	line-height: 3.66rem;
 	text-align: center;
 	color: ${({ theme }) => theme.colors.white};
-	margin: 0;
+	margin: ${({ theme }) => theme.spacings.tiny};
 `;

@@ -5,8 +5,8 @@ import useUserDetailsQuery, { GetUserDetails } from 'queries/boardroom/useUserDe
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
-
-import { Button, CloseIcon, Flex, IconButton, TextInput } from '@synthetixio/ui';
+import { Button, CloseIcon, Flex, IconButton, TextInput } from 'components/old-ui';
+import SecondaryModal from '../SecondaryModal';
 
 type EditProfileModalProps = {
 	userProfile: GetUserDetails;
@@ -57,123 +57,109 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ userProfile }) => {
 	};
 
 	return (
-		<StyledNominateModalWrapper direction="column" alignItems="center">
-			<StyledIconButton onClick={() => setIsOpen(false)} active rounded>
-				<CloseIcon active />
-			</StyledIconButton>
+		<SecondaryModal maxWidth="50%">
 			<StyledModalHeadline>{t('modals.editProfile.headline')}</StyledModalHeadline>
 			<StyledModalSubheadline>{t('modals.editProfile.subheadline')}</StyledModalSubheadline>
-			<StyledBlackBox direction="column" alignItems="center">
-				<InputRow alignItems="center">
-					<InputCol direction="column">
-						<StyledBlackBoxSubline>
-							{t('modals.editProfile.inputs.headline.username')}
-						</StyledBlackBoxSubline>
-						<StyledInput
-							placeholder={t('modals.editProfile.inputs.placeholder.username')}
-							value={username}
-							onInput={(e) => setUsername(e.target.value)}
-							id="username"
-						></StyledInput>
-					</InputCol>
+			<InputRow alignItems="center">
+				<InputCol direction="column">
+					<StyledBlackBoxSubline>
+						{t('modals.editProfile.inputs.headline.username')}
+					</StyledBlackBoxSubline>
+					<StyledInput
+						placeholder={t('modals.editProfile.inputs.placeholder.username')}
+						value={username}
+						onInput={(e) => setUsername(e.target.value)}
+						id="username"
+					></StyledInput>
+				</InputCol>
 
-					<InputCol direction="column">
-						<StyledBlackBoxSubline>
-							{t('modals.editProfile.inputs.headline.profileImageUrl')}
-						</StyledBlackBoxSubline>
-						<StyledInput
-							placeholder={t('modals.editProfile.inputs.placeholder.profileImageUrl')}
-							value={pfpThumbnailUrl}
-							onInput={(e) => setPfpThumbnailUrl(e.target.value)}
-							id="profileImageURL"
-						></StyledInput>
-					</InputCol>
-				</InputRow>
-				<InputRow>
-					<InputCol direction="column">
-						<StyledBlackBoxSubline>
-							{t('modals.editProfile.inputs.headline.pitch')}
-						</StyledBlackBoxSubline>
-						<StyledInput
-							placeholder={t('modals.editProfile.inputs.placeholder.pitch')}
-							value={pitch}
-							onInput={(e) => setPitch(e.target.value)}
-							id="about"
-						></StyledInput>
-					</InputCol>
-				</InputRow>
-				<InputRow>
-					<InputCol direction="column">
-						<StyledBlackBoxSubline>
-							{t('modals.editProfile.inputs.headline.about')}
-						</StyledBlackBoxSubline>
-						<StyledInput
-							placeholder={t('modals.editProfile.inputs.placeholder.about')}
-							value={about}
-							onInput={(e) => setAbout(e.target.value)}
-							id="about"
-						></StyledInput>
-					</InputCol>
+				<InputCol direction="column">
+					<StyledBlackBoxSubline>
+						{t('modals.editProfile.inputs.headline.profileImageUrl')}
+					</StyledBlackBoxSubline>
+					<StyledInput
+						placeholder={t('modals.editProfile.inputs.placeholder.profileImageUrl')}
+						value={pfpThumbnailUrl}
+						onInput={(e) => setPfpThumbnailUrl(e.target.value)}
+						id="profileImageURL"
+					></StyledInput>
+				</InputCol>
+			</InputRow>
+			<InputRow>
+				<InputCol direction="column">
+					<StyledBlackBoxSubline>
+						{t('modals.editProfile.inputs.headline.pitch')}
+					</StyledBlackBoxSubline>
+					<StyledInput
+						placeholder={t('modals.editProfile.inputs.placeholder.pitch')}
+						value={pitch}
+						onInput={(e) => setPitch(e.target.value)}
+						id="about"
+					></StyledInput>
+				</InputCol>
+			</InputRow>
+			<InputRow>
+				<InputCol direction="column">
+					<StyledBlackBoxSubline>
+						{t('modals.editProfile.inputs.headline.about')}
+					</StyledBlackBoxSubline>
+					<StyledInput
+						placeholder={t('modals.editProfile.inputs.placeholder.about')}
+						value={about}
+						onInput={(e) => setAbout(e.target.value)}
+						id="about"
+					></StyledInput>
+				</InputCol>
 
-					<InputCol direction="column">
-						<StyledBlackBoxSubline>
-							{t('modals.editProfile.inputs.headline.github')}
-						</StyledBlackBoxSubline>
-						<StyledInput
-							placeholder={t('modals.editProfile.inputs.placeholder.github')}
-							value={github}
-							onInput={(e) => setGithub(e.target.value)}
-							id="github"
-						></StyledInput>
-					</InputCol>
-				</InputRow>
-				<InputRow>
-					<InputCol direction="column">
-						<StyledBlackBoxSubline>
-							{t('modals.editProfile.inputs.headline.discord')}
-						</StyledBlackBoxSubline>
-						<StyledInput
-							placeholder={t('modals.editProfile.inputs.placeholder.discord')}
-							value={discord}
-							onInput={(e) => setDiscord(e.target.value)}
-							id="discord"
-						></StyledInput>
-					</InputCol>
+				<InputCol direction="column">
+					<StyledBlackBoxSubline>
+						{t('modals.editProfile.inputs.headline.github')}
+					</StyledBlackBoxSubline>
+					<StyledInput
+						placeholder={t('modals.editProfile.inputs.placeholder.github')}
+						value={github}
+						onInput={(e) => setGithub(e.target.value)}
+						id="github"
+					></StyledInput>
+				</InputCol>
+			</InputRow>
+			<InputRow>
+				<InputCol direction="column">
+					<StyledBlackBoxSubline>
+						{t('modals.editProfile.inputs.headline.discord')}
+					</StyledBlackBoxSubline>
+					<StyledInput
+						placeholder={t('modals.editProfile.inputs.placeholder.discord')}
+						value={discord}
+						onInput={(e) => setDiscord(e.target.value)}
+						id="discord"
+					></StyledInput>
+				</InputCol>
 
-					<InputCol direction="column">
-						<StyledBlackBoxSubline>
-							{t('modals.editProfile.inputs.headline.twitter')}
-						</StyledBlackBoxSubline>
-						<StyledInput
-							placeholder={t('modals.editProfile.inputs.placeholder.twitter')}
-							value={twitter}
-							onInput={(e) => setTwitter(e.target.value)}
-							id="twitter"
-						></StyledInput>
-					</InputCol>
-				</InputRow>
-			</StyledBlackBox>
+				<InputCol direction="column">
+					<StyledBlackBoxSubline>
+						{t('modals.editProfile.inputs.headline.twitter')}
+					</StyledBlackBoxSubline>
+					<StyledInput
+						placeholder={t('modals.editProfile.inputs.placeholder.twitter')}
+						value={twitter}
+						onInput={(e) => setTwitter(e.target.value)}
+						id="twitter"
+					></StyledInput>
+				</InputCol>
+			</InputRow>
 			<Button
 				variant="primary"
 				onClick={() => {
 					handleProfileEdit();
 				}}
-				text="Save Profile"
-			/>
-		</StyledNominateModalWrapper>
+			>
+				Save Profile
+			</Button>
+		</SecondaryModal>
 	);
 };
 export default EditProfileModal;
-
-const StyledNominateModalWrapper = styled(Flex)`
-	background: black;
-	height: 100%;
-	width: 100%;
-	background-repeat: no-repeat;
-	background-size: contain;
-	position: relative;
-	padding-top: 10%;
-`;
 
 const StyledModalHeadline = styled.h1`
 	font-family: 'Inter Bold';
@@ -185,12 +171,6 @@ const StyledModalSubheadline = styled.h2`
 	font-family: ${(props) => props.theme.fonts.regular};
 	color: ${(props) => props.theme.colors.white};
 	font-size: 14px;
-`;
-
-const StyledBlackBox = styled(Flex)`
-	background-color: ${({ theme }) => theme.colors.black};
-	max-width: 314px;
-	padding: 24px 50px;
 `;
 
 const InputRow = styled(Flex)`
