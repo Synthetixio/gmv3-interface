@@ -1,3 +1,0 @@
-interface BannerProps {
-	hideButton?: boolean;
-}

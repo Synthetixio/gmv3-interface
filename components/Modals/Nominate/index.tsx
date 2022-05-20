@@ -1,14 +1,101 @@
-import { Button, Checkbox, Flex } from '@synthetixio/ui';
-import Connector from 'containers/Connector';
+import { Button, Checkbox, Flex } from 'components/old-ui';
+import { H3 } from 'components/Headlines/H3';
+import { useConnectorContext } from 'containers/Connector';
+import { useModalContext } from 'containers/Modal';
+import { DeployedModules } from 'containers/Modules';
+import useNominateMutation from 'mutations/nomination/useNominateMutation';
+import { useRouter } from 'next/router';
+import useCurrentPeriod from 'queries/epochs/useCurrentPeriodQuery';
+import useIsNominated from 'queries/nomination/useIsNominatedQuery';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { truncateAddress } from 'utils/truncate-address';
 import BaseModal from '../BaseModal';
 
 export default function NominateModal() {
 	const { t } = useTranslation();
+	const { push } = useRouter();
+	const { setIsOpen } = useModalContext();
 	const [activeCheckbox, setActiveCheckbox] = useState('');
-	const { walletAddress, ensName, connectWallet } = Connector.useContainer();
+	const { walletAddress, ensName, connectWallet } = useConnectorContext();
+	const nominateForSpartanCouncil = useNominateMutation(DeployedModules.SPARTAN_COUNCIL);
+	const nominateForGrantsCouncil = useNominateMutation(DeployedModules.GRANTS_COUNCIL);
+	const nominateForAmbassadorCouncil = useNominateMutation(DeployedModules.AMBASSADOR_COUNCIL);
+	const nominateForTreasuryCouncil = useNominateMutation(DeployedModules.TREASURY_COUNCIL);
+	const isInNominationPeriodSpartan = useCurrentPeriod(DeployedModules.SPARTAN_COUNCIL);
+	const isInNominationPeriodGrants = useCurrentPeriod(DeployedModules.GRANTS_COUNCIL);
+	const isInNominationPeriodAmbassador = useCurrentPeriod(DeployedModules.AMBASSADOR_COUNCIL);
+	const isInNominationPeriodTreasury = useCurrentPeriod(DeployedModules.TREASURY_COUNCIL);
+
+	const isAlreadyNominatedForSpartan = useIsNominated(
+		DeployedModules.SPARTAN_COUNCIL,
+		walletAddress || ''
+	);
+	const isAlreadyNominatedForGrants = useIsNominated(
+		DeployedModules.GRANTS_COUNCIL,
+		walletAddress || ''
+	);
+	const isAlreadyNominatedForAmbassador = useIsNominated(
+		DeployedModules.AMBASSADOR_COUNCIL,
+		walletAddress || ''
+	);
+	const isAlreadyNominatedForTreasury = useIsNominated(
+		DeployedModules.TREASURY_COUNCIL,
+		walletAddress || ''
+	);
+
+	/* @dev only for security reasons. For whatever the user ends up in a nomination modal although he already nominated himself, 
+	we should block all the councils radio button */
+	const isAlreadyNominated =
+		isAlreadyNominatedForSpartan.data ||
+		isAlreadyNominatedForGrants.data ||
+		isAlreadyNominatedForAmbassador.data ||
+		isAlreadyNominatedForTreasury.data;
+
+	const handleNomination = async () => {
+		switch (activeCheckbox) {
+			case 'spartan':
+				const spartanTx = await nominateForSpartanCouncil.mutateAsync();
+				if (spartanTx) {
+					setIsOpen(false);
+					push({
+						pathname: '/councils/'.concat('spartan'),
+					});
+				}
+				break;
+			case 'grants':
+				const grantsTx = await nominateForGrantsCouncil.mutateAsync();
+				if (grantsTx) {
+					setIsOpen(false);
+					push({
+						pathname: '/councils/'.concat('grants'),
+					});
+				}
+				break;
+			case 'ambassador':
+				const ambassadorTx = await nominateForAmbassadorCouncil.mutateAsync();
+				if (ambassadorTx) {
+					setIsOpen(false);
+					push({
+						pathname: '/councils/'.concat('ambassador'),
+					});
+				}
+				break;
+			case 'treasury':
+				const treasuryTx = await nominateForTreasuryCouncil.mutateAsync();
+				if (treasuryTx) {
+					setIsOpen(false);
+					push({
+						pathname: '/councils/'.concat('treasury'),
+					});
+				}
+				break;
+			default:
+				console.info('no matching entity found');
+		}
+	};
+
 	return (
 		<BaseModal headline={t('modals.nomination.headline')}>
 			<StyledBlackBox direction="column" alignItems="center">
@@ -17,17 +104,11 @@ export default function NominateModal() {
 					{ensName ? (
 						ensName
 					) : walletAddress ? (
-						walletAddress
-							.substring(0, 5)
-							.concat('...')
-							.concat(walletAddress.substring(walletAddress.length - 4))
+						truncateAddress(walletAddress)
 					) : (
-						<Button
-							onClick={() => connectWallet()}
-							variant="primary"
-							size="small"
-							text={t('modals.nomination.checkboxes.connect-wallet')}
-						/>
+						<Button onClick={() => connectWallet()} variant="primary" size="small">
+							{t('modals.nomination.checkboxes.connect-wallet')}
+						</Button>
 					)}
 				</StyledWalletAddress>
 			</StyledBlackBox>
@@ -40,6 +121,9 @@ export default function NominateModal() {
 					label={t('modals.nomination.checkboxes.spartan')}
 					color="lightBlue"
 					checked={activeCheckbox === 'spartan'}
+					disabled={
+						isAlreadyNominated || isInNominationPeriodSpartan.data?.currentPeriod !== 'NOMINATION'
+					}
 				/>
 				<Checkbox
 					id="grants-council-checkbox"
@@ -49,6 +133,9 @@ export default function NominateModal() {
 					label={t('modals.nomination.checkboxes.grants')}
 					color="lightBlue"
 					checked={activeCheckbox === 'grants'}
+					disabled={
+						isAlreadyNominated || isInNominationPeriodGrants.data?.currentPeriod !== 'NOMINATION'
+					}
 				/>
 				<Checkbox
 					id="ambassador-council-checkbox"
@@ -58,6 +145,10 @@ export default function NominateModal() {
 					label={t('modals.nomination.checkboxes.ambassador')}
 					color="lightBlue"
 					checked={activeCheckbox === 'ambassador'}
+					disabled={
+						isAlreadyNominated ||
+						isInNominationPeriodAmbassador.data?.currentPeriod !== 'NOMINATION'
+					}
 				/>
 				<Checkbox
 					id="treasury-council-checkbox"
@@ -67,15 +158,14 @@ export default function NominateModal() {
 					label={t('modals.nomination.checkboxes.treasury')}
 					color="lightBlue"
 					checked={activeCheckbox === 'treasury'}
+					disabled={
+						isAlreadyNominated || isInNominationPeriodTreasury.data?.currentPeriod !== 'NOMINATION'
+					}
 				/>
 			</StyledCheckboxWrapper>
-			<Button
-				variant="primary"
-				onClick={() => {
-					console.log('implement me');
-				}}
-				text="Nominate Self"
-			/>
+			<StyledNominateButton variant="primary" onClick={() => handleNomination()}>
+				{t('modals.nomination.button')}
+			</StyledNominateButton>
 		</BaseModal>
 	);
 }
@@ -89,14 +179,14 @@ const StyledBlackBox = styled(Flex)`
 
 const StyledBlackBoxSubline = styled.h6`
 	font-family: 'Inter Bold';
-	font-size: 1rem;
+	font-size: 0.75rem;
 	color: ${({ theme }) => theme.colors.grey};
 	margin: 0;
 `;
 
-const StyledWalletAddress = styled.h3`
+const StyledWalletAddress = styled(H3)`
 	font-family: 'Inter Bold';
-	font-size: 2rem;
+	font-size: 1.5rem;
 	margin: ${({ theme }) => theme.spacings.tiniest};
 	color: ${({ theme }) => theme.colors.white};
 `;
@@ -107,4 +197,8 @@ const StyledCheckboxWrapper = styled(Flex)`
 	> * {
 		margin: ${({ theme }) => theme.spacings.medium};
 	}
+`;
+
+const StyledNominateButton = styled(Button)`
+	max-width: 312px;
 `;

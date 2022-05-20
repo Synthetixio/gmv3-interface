@@ -1,146 +1,101 @@
-import { ArrowLinkOffIcon, Card, Flex } from '@synthetixio/ui';
-import RemainingTime from 'components/RemainingTime';
-import { PropsWithChildren } from 'react';
+import { Button } from '@synthetixio/ui';
+import { ArrowLinkOffIcon, ButtonCard } from 'components/old-ui';
+import CouncilsCarousel from 'components/CouncilsCarousel';
+import { H1 } from 'components/Headlines/H1';
+import { Text } from 'components/Text/text';
+import { DeployedModules } from 'containers/Modules';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import { CouncilCard } from 'components/CouncilCard';
 
-interface LandingPageProps {
-	remainingTime?: number;
-	headline?: string;
-}
-
-export default function LandingPage({
-	remainingTime,
-	headline,
-	children,
-}: PropsWithChildren<LandingPageProps>) {
+export default function LandingPage() {
 	const { t } = useTranslation();
+	const { push } = useRouter();
+
 	return (
-		<>
-			<SNXStar direction="column" justifyContent="center" alignItems="center">
-				{remainingTime && <StyledNumber glow>{remainingTime}</StyledNumber>}
-				<StyledStarHeadline>
-					{headline ? headline : t('landing-pages.nomination.next-election')}
-				</StyledStarHeadline>
-				<StyledButtonsWrapper>
-					<StyledRow justifyContent="center">
-						<StyledCard onClick={() => {}} withBorderColor={{ gradient: 'rainbow' }}>
-							<StyledCardContent direction="column">
-								<StyledButtonHeadline>
-									{t('landing-pages.nomination.view-council-members')}{' '}
-									<ArrowLinkOffIcon active={true} />
-								</StyledButtonHeadline>
-								<StyledButtonSubline>
-									{t('landing-pages.nomination.view-council-members-subline')}
-								</StyledButtonSubline>
-							</StyledCardContent>
-						</StyledCard>
-						<StyledCard onClick={() => {}} withBorderColor={{ gradient: 'rainbow' }}>
-							<StyledCardContent direction="column">
-								<StyledButtonHeadline>
-									{t('landing-pages.nomination.view-council-members')}{' '}
-									<ArrowLinkOffIcon active={true} />
-								</StyledButtonHeadline>
-								<StyledButtonSubline>
-									{t('landing-pages.nomination.view-council-members-subline')}
-								</StyledButtonSubline>
-							</StyledCardContent>
-						</StyledCard>
-					</StyledRow>
-					<StyledRow justifyContent="center">
-						<StyledCard onClick={() => {}} withBorderColor={{ gradient: 'rainbow' }}>
-							<StyledCardContent direction="column">
-								<StyledButtonHeadline>
-									{t('landing-pages.nomination.view-council-members')}{' '}
-									<ArrowLinkOffIcon active={true} />
-								</StyledButtonHeadline>
-								<StyledButtonSubline>
-									{t('landing-pages.nomination.view-council-members-subline')}
-								</StyledButtonSubline>
-							</StyledCardContent>
-						</StyledCard>
-						<StyledCard onClick={() => {}} withBorderColor={{ gradient: 'rainbow' }}>
-							<StyledCardContent direction="column">
-								<StyledButtonHeadline>
-									{t('landing-pages.nomination.view-council-members')}{' '}
-									<ArrowLinkOffIcon active={true} />
-								</StyledButtonHeadline>
-								<StyledButtonSubline>
-									{t('landing-pages.nomination.view-council-members-subline')}
-								</StyledButtonSubline>
-							</StyledCardContent>
-						</StyledCard>
-					</StyledRow>
-				</StyledButtonsWrapper>
-			</SNXStar>
-			{children}
-		</>
+		<div className="flex flex-col align-center gap-4">
+			<H1>{t('landing-page.headline')}</H1>
+			<Text>{t('landing-page.subline')}</Text>
+			<div className="flex justify-center flex-wrap gap-4">
+				<CouncilCard
+					image="/logos/spartan-council.svg"
+					deployedModule={DeployedModules.SPARTAN_COUNCIL}
+					council="spartan"
+				/>
+				<CouncilCard
+					image="/logos/grants-council.svg"
+					deployedModule={DeployedModules.GRANTS_COUNCIL}
+					council="grants"
+				/>
+				<CouncilCard
+					image="/logos/ambassador-council.svg"
+					deployedModule={DeployedModules.AMBASSADOR_COUNCIL}
+					council="ambassador"
+				/>
+				<CouncilCard
+					image="/logos/treasury-council.svg"
+					deployedModule={DeployedModules.TREASURY_COUNCIL}
+					council="treasury"
+				/>
+			</div>
+			<H1>{t('landing-page.second-headline')}</H1>
+			<Text>{t('landing-page.second-subline')}</Text>
+			<div className="flex flex-wrap justify-center">
+				<Link href="/councils" passHref>
+					<StyledButtonCards
+						headline={t('landing-page.button-cards.all-members')}
+						subline={t('landing-page.button-cards.all-members-subline')}
+						icon={<ArrowLinkOffIcon active />}
+						arrowDirection="right"
+					></StyledButtonCards>
+				</Link>
+				<Link href="https://sips.synthetix.io/all-sip/" passHref>
+					<StyledButtonCards
+						headline={t('landing-page.button-cards.sccp')}
+						subline={t('landing-page.button-cards.sccp-subline')}
+						icon={<ArrowLinkOffIcon active />}
+						arrowDirection="right"
+					></StyledButtonCards>
+				</Link>
+			</div>
+			<div className="flex flex-wrap justify-center">
+				<Link href="https://discord.com/invite/HQSTqXH84t" passHref>
+					<StyledButtonCards
+						headline={t('landing-page.button-cards.forum')}
+						subline={t('landing-page.button-cards.forum-subline')}
+						icon={<ArrowLinkOffIcon active />}
+						arrowDirection="right"
+					></StyledButtonCards>
+				</Link>
+				<Link href="https://gov.synthetix.io/#/" passHref>
+					<StyledButtonCards
+						headline={t('landing-page.button-cards.records')}
+						subline={t('landing-page.button-cards.records-subline')}
+						icon={<ArrowLinkOffIcon active />}
+						arrowDirection="right"
+					></StyledButtonCards>
+				</Link>
+			</div>
+			<H1>{t('landing-page.tabs-headline')}</H1>
+			<Text>{t('landing-page.tabs-subline')}</Text>
+			<CouncilsCarousel />
+			<Button
+				onClick={() => {
+					push({ pathname: '/councils' });
+				}}
+				size="md"
+				className="mx-auto my-10 min-w-[140px]"
+			>
+				{t('landing-page.carousel-btn')}
+			</Button>
+		</div>
 	);
 }
 
-const SNXStar = styled(Flex)`
-	background-image: url('/images/snx-star.svg');
-	width: 100%;
-	min-height: 700px;
-	background-position: center center;
-	background-repeat: no-repeat;
-	position: relative;
-`;
-
-const StyledNumber = styled(RemainingTime)`
-	position: absolute;
-	top: 45%;
-	font-size: 2.33rem;
-`;
-
-const StyledStarHeadline = styled.h1`
-	font-family: 'GT America Extended';
-	font-stretch: expanded;
-	font-size: 3.66rem;
-	text-align: center;
-	margin: 0;
-	position: absolute;
-	top: 50%;
-`;
-
-const StyledButtonsWrapper = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	position: absolute;
-	top: 60%;
-`;
-
-const StyledRow = styled(Flex)`
-	width: 100%;
-	margin: 0px ${({ theme }) => theme.spacings.medium};
-`;
-
-const StyledButtonHeadline = styled.h3`
-	font-family: 'GT America';
-	font-weight: 700;
-	margin: 0;
-	color: ${({ theme }) => theme.colors.white};
-	font-size: 1.13rem;
-	display: flex;
-	justify-content: space-between;
-`;
-
-const StyledButtonSubline = styled.div`
-	font-family: 'Inter';
-	font-size: 1.13rem;
-	line-height: 21px;
-	color: ${({ theme }) => theme.colors.grey};
-	max-width: 350px;
-`;
-
-const StyledCard = styled(Card)`
-	max-width: 460px;
-	margin: ${({ theme }) => theme.spacings.tiny};
-`;
-
-const StyledCardContent = styled(Flex)`
-	padding: 24px;
+const StyledButtonCards = styled(ButtonCard)`
+	width: 350px;
+	height: 112px;
+	margin: ${({ theme }) => theme.spacings.small};
 `;

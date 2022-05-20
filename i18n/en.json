@@ -2,9 +2,7 @@
 	"header": {
 		"routes": {
 			"home": "Home",
-			"elections": "Elections",
-			"sips": "Sips",
-			"discuss": "Discuss",
+			"councils": "Councils",
 			"vote": "Vote"
 		},
 		"connect-wallet": "Connect Wallet"
@@ -12,50 +10,88 @@
 	"footer": {
 		"copyright": "Copyright © Synthetix 2022"
 	},
-	"landing-pages": {
-		"nomination": {
-			"next-election": "NEXT ELECTION IN",
-			"view-council-members": "VIEW ALL COUNCIL MEMBERS",
-			"view-council-members-subline": "View the history of past council elections and vote in any currently open elections.",
-			"elected-members": "Our Current Elected Members",
-			"view-all-members": "View all members",
-
-			"nominate": {
-				"headline": "NOMINATE YOURSELF",
-				"self": "NOMINATE SELF",
-				"closes": "Nominations Closes in"
-			}
+	"landing-page": {
+		"headline": "Governing Bodies",
+		"subline": "The Synthetix Protocol is governed by four bodies, each responsible for a core aspect of a DAO.",
+		"second-headline": "Synthetix Governance",
+		"second-subline": "Find links to each core component of the Synthetix Governance System",
+		"tabs-headline": "Current Members",
+		"tabs-subline": "The current members of each Synthetix Governing Body",
+		"carousel-btn": "View all members",
+		"view-member": "View Member",
+		"button-cards": {
+			"all-members": "VIEW ALL COUNCIL MEMBERS",
+			"all-members-subline": "View the history of past council elections and vote in any currently open elections.",
+			"sccp": "SYNTHETIX SCCP/SIP",
+			"sccp-subline": "View the current status of all SCCPs and SIPs.",
+			"forum": "SYNTHETIX FORUM",
+			"forum-subline": "Join the community governance discussion in realtime.",
+			"records": "SCCP / SIP VOTING RECORDS",
+			"records-subline": "View the voting history of all governance proposals."
 		},
-		"council-tabs": {
-			"all": "All Council Members",
+		"cards": {
 			"spartan": "Spartan Council",
 			"grants": "Grants Council",
 			"ambassador": "Ambassador Council",
-			"treasury": "Treasury Council"
+			"treasury": "Treasury Council",
+			"cta": {
+				"closed": "CLOSED - COUNCIL ELECTED",
+				"nomination": "NOMINATIONS OPEN",
+				"vote": "VOTING OPEN"
+			},
+			"button": {
+				"closed": "View Council",
+				"nomination": "Nominate Yourself",
+				"vote": "Vote Candidates"
+			},
+			"nominees": "View Nominees",
+			"members": "Members",
+			"received": "Votes Received",
+			"candidates": "Candidates"
 		},
-		"elections": {
-			"headline": "Current Elections",
-			"vote-council": "Vote Council",
-			"councils": {
-				"ccc": "Core Contributor Committee",
-				"ac": "Ambassador Council",
-				"sc": "Spartan Council",
-				"gc": "Grants Council",
-				"tc": "Treasury Council"
-			}
-		},
-		"voting": {
-			"headline": "VOTING OPEN",
-			"button": "Vote Now"
+		"tabs": {
+			"all": "All Council Members",
+			"sc": "Spartan Council",
+			"gc": "Grants Council",
+			"ac": "Ambassador Council",
+			"tc": "Treasury Council"
 		}
 	},
-	"council-members": {
-		"headline": "{{ council }} Nominees"
+	"councils": {
+		"headline": "Our Current Elected Members",
+		"back-btn": "Back",
+		"nominees": "{{ council }} Council Nominees",
+		"view-member": "View Member",
+		"edit-nomination": "Edit Nomination",
+		"dropdown": {
+			"withdraw": "Withdraw Nomination",
+			"edit": "Edit Profile",
+			"etherscan": "Etherscan",
+			"withdraw-vote": "Withdraw Vote"
+		}
+	},
+	"profiles": {
+		"subheadline": "Profile",
+		"twitter": "Twitter",
+		"discord": "Discord",
+		"github": "Github",
+		"currentVotingWeight": "Current Voting Weight",
+		"participatedVotes": "Total Votes Contributed",
+		"wallet": "Wallet Address",
+		"pitch": "Governance Pitch",
+		"view-all-members": "View all members",
+		"council": "{{council}} COUNCIL"
+	},
+	"vote": {
+		"headline": "Live Voting",
+		"nominees": "{{council}} Council Nominees",
+		"card-title": "Vote Nominee"
 	},
 	"modals": {
 		"nomination": {
 			"headline": "Nominate Self",
 			"nominationAddress": "Nomination Wallet Address",
+			"button": "Nominate Self",
 			"checkboxes": {
 				"spartan": "Spartan Council",
 				"grants": "Grants Council",
@@ -66,13 +102,50 @@
 		},
 		"withdraw": {
 			"headline": "Withdraw Nomination",
-			"nomination-for": "Nomination for {{council}}",
-			"nomination": "Withdraw Nomination"
+			"nomination-for": "Nomination for {{ council }} Council",
+			"button": "Withdraw Nomination"
+		},
+		"edit": {
+			"headline": "Edit Your Nomination",
+			"current": "Current Nomination",
+			"council": "{{council}} Council",
+			"step-one": "Step 1 -  Unominate yourself",
+			"step-two": "Step 2 - Chose New Council Nomination",
+			"button": "Next"
 		},
 		"vote": {
-			"headline": "Spartan Council",
+			"headline": "Voting For {{council}} Council",
 			"submit": "Submit Vote",
 			"profile": "See full profile"
+		},
+		"withdraw-vote": {
+			"headline": "Uncast Vote",
+			"voted-for": "Voted for {{council}} Council",
+			"uncast-vote": "Uncast Vote"
+		},
+		"editProfile": {
+			"headline": "Edit Profile",
+			"subheadline": "Update your profile with more information about yourself",
+			"inputs": {
+				"headline": {
+					"username": "Username",
+					"profileImageUrl": "Profile Image URL",
+					"discord": "Discord",
+					"twitter": "Twitter",
+					"about": "About",
+					"github": "Github",
+					"pitch": "Governance Pitch"
+				},
+				"placeholder": {
+					"username": "e.g John Smith",
+					"profileImageUrl": "e.g ipfs://QmQx9x2ioChpipfHGeGEQXYSRwAW",
+					"discord": "@john_smith#2131",
+					"twitter": "@john_smith",
+					"github": "@john_smith",
+					"pitch": "e.g I am a OG Synthetix Community Member.",
+					"about": "e.g OG DeFi Member"
+				}
+			}
 		}
 	},
 	"banner": {
@@ -80,6 +153,11 @@
 			"headline": "VOTING IS LIVE - VOTE NOW!",
 			"closes": "Closes in",
 			"button": "VOTE NOW"
+		},
+		"nominate": {
+			"headline": "NOMINATE YOURSELF",
+			"self": "NOMINATE SELF",
+			"closes": "Nominations Closes in"
 		}
 	}
 }

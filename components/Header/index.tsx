@@ -1,5 +1,5 @@
-import { Card, IconButton, SettingsIcon, SNXIcon, SpotlightButton, theme } from '@synthetixio/ui';
-import Connector from 'containers/Connector';
+import { Button, SNXIcon, SpotlightButton, theme } from 'components/old-ui';
+import { useConnectorContext } from 'containers/Connector';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,25 +11,19 @@ export default function Header() {
 	const [activeRoute, setActiveRoute] = useState('home');
 
 	const { connectWallet, disconnectWallet, walletAddress, ensAvatar, ensName } =
-		Connector.useContainer();
+		useConnectorContext();
 
-	const routes = [
-		t('header.routes.home'),
-		t('header.routes.elections'),
-		t('header.routes.sips'),
-		t('header.routes.discuss'),
-		t('header.routes.vote'),
-	];
+	const routes = [t('header.routes.home'), t('header.routes.councils'), t('header.routes.vote')];
 
 	const handleIndexAndRouteChange = (index: number) => {
-		push(index === 0 ? '/' : routes[index].toLowerCase());
+		push(index === 0 ? '/' : '/'.concat(routes[index].toLowerCase()));
 		setActiveRoute(routes[index].toLowerCase());
 	};
 
 	useEffect(() => {
 		const splitRoute = pathname.split('/')[1];
 		setActiveRoute(splitRoute ? splitRoute : 'home');
-	}, []);
+	}, [pathname]);
 
 	return (
 		<StyledHeader>
@@ -46,11 +40,8 @@ export default function Header() {
 				);
 			})}
 			<ButtonContainer>
-				<IconButton onClick={() => console.info('implement me')} size="tiny" active={true}>
-					<SettingsIcon />
-				</IconButton>
 				<StyledConnectWalletButton
-					withBorderColor={{ gradient: 'lightBlue' }}
+					variant="quaternary"
 					onClick={walletAddress ? disconnectWallet : connectWallet}
 				>
 					{ensAvatar && <StyledENSAvatar src={ensAvatar} />}
@@ -84,7 +75,7 @@ const StyledHeaderHeadline = styled.h1`
 	font-family: 'Lustra Text';
 	font-style: normal;
 	font-weight: 400;
-	font-size: 1.16rem;
+	font-size: 0.87rem;
 	color: white;
 	margin-left: ${theme.spacings.tiny};
 	margin-right: ${theme.spacings.biggest};
@@ -99,12 +90,13 @@ const StyledSpotlightButton = styled(SpotlightButton)`
 
 const ButtonContainer = styled.div`
 	display: flex;
+	align-items: center;
 	justify-content: space-between;
 	min-width: 200px;
 	margin-right: ${theme.spacings.superBig};
 `;
 
-const StyledConnectWalletButton = styled(Card)`
+const StyledConnectWalletButton = styled(Button)`
 	min-width: 138px;
 	padding: ${({ theme }) => theme.spacings.tiniest};
 	cursor: pointer;
@@ -113,10 +105,11 @@ const StyledConnectWalletButton = styled(Card)`
 const StyledWalletAddress = styled.span`
 	color: ${({ theme }) => theme.colors.white};
 	font-family: 'Inter Bold';
-	font-size: 1rem;
+	font-size: 0.75rem;
 	text-align: center;
-	display: block;
-	padding: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `;
 
 const StyledENSAvatar = styled.img`

@@ -1,9 +1,13 @@
 import { ethers } from 'ethers';
-import { createContainer } from 'unstated-next';
-
 import ElectionModuleABI from 'contracts/ElectionModule.json';
-import { ElectionModuleAddress } from 'constants/addresses';
-import Connector from 'containers/Connector';
+import { useConnectorContext } from 'containers/Connector';
+import {
+	ambassadorCouncil,
+	grantsCouncil,
+	spartanCouncil,
+	treasuryCouncil,
+} from 'constants/addresses';
+import { createContext, useContext, useEffect, useState, FC } from 'react';
 
 export enum DeployedModules {
 	SPARTAN_COUNCIL = 'spartan council',
@@ -11,56 +15,73 @@ export enum DeployedModules {
 	GRANTS_COUNCIL = 'grants council',
 	TREASURY_COUNCIL = 'treasury council',
 }
-export type GovernanceModule = {
-	address: string;
-	contract: ethers.Contract;
+type GovernanceModule = Partial<
+	Record<DeployedModules, { address: string; contract: ethers.Contract }>
+>;
+
+type ModulesContextType = GovernanceModule;
+
+const ModulesContext = createContext<ModulesContextType | null>(null);
+
+export const useModulesContext = () => {
+	return useContext(ModulesContext) as ModulesContextType;
 };
 
-const useModules = () => {
-	const { chainId, provider, signer } = Connector.useContainer();
+export const ModulesProvider: FC = ({ children }) => {
+	const { chainId, provider, signer } = useConnectorContext();
+	const [governanceModules, setGovernanceModules] = useState<GovernanceModule | null>(null);
 
-	let governanceModules: Partial<Record<DeployedModules, GovernanceModule>> = {};
+	useEffect(() => {
+		if (chainId && provider) {
+			const SpartanCouncilModule = new ethers.Contract(
+				spartanCouncil,
+				ElectionModuleABI.abi,
+				signer ?? provider
+			);
 
-	if (chainId && provider) {
-		const SpartanCouncilModule = new ethers.Contract(
-			ElectionModuleAddress,
-			ElectionModuleABI.abi,
-			signer ?? provider
-		);
+			let modules = {} as GovernanceModule;
 
-		governanceModules[DeployedModules.SPARTAN_COUNCIL] = {
-			address: ElectionModuleAddress,
-			contract: SpartanCouncilModule,
-		};
+			modules[DeployedModules.SPARTAN_COUNCIL] = {
+				address: spartanCouncil,
+				contract: SpartanCouncilModule,
+			};
 
-		// const AmbassadorCouncilModule = new ethers.Contract(
-		// 	ElectionModuleAddress,
-		// 	ElectionModuleABI.abi,
-		// signer ?? provider
-		// );
+			const AmbassadorCouncilModule = new ethers.Contract(
+				ambassadorCouncil,
+				ElectionModuleABI.abi,
+				signer ?? provider
+			);
 
-		// contracts.push(AmbassadorCouncilModule);
+			modules[DeployedModules.AMBASSADOR_COUNCIL] = {
+				address: ambassadorCouncil,
+				contract: AmbassadorCouncilModule,
+			};
 
-		// const GrantsCouncilModule = new ethers.Contract(
-		// 	ElectionModuleAddress,
-		// 	ElectionModuleABI.abi,
-		// signer ?? provider
-		// );
+			const GrantsCouncilModule = new ethers.Contract(
+				grantsCouncil,
+				ElectionModuleABI.abi,
+				signer ?? provider
+			);
 
-		// contracts.push(GrantsCouncilModule);
+			modules[DeployedModules.GRANTS_COUNCIL] = {
+				address: grantsCouncil,
+				contract: GrantsCouncilModule,
+			};
 
-		// const TreasuryCouncilModule = new ethers.Contract(
-		// 	ElectionModuleAddress,
-		// 	ElectionModuleABI.abi,
-		// signer ?? provider
-		// );
+			const TreasuryCouncilModule = new ethers.Contract(
+				treasuryCouncil,
+				ElectionModuleABI.abi,
+				signer ?? provider
+			);
 
-		// contracts.push(TreasuryCouncilModule);
-	}
+			modules[DeployedModules.TREASURY_COUNCIL] = {
+				address: treasuryCouncil,
+				contract: TreasuryCouncilModule,
+			};
 
-	return { governanceModules };
+			setGovernanceModules(modules);
+		}
+	}, [chainId, provider, signer]);
+
+	return <ModulesContext.Provider value={governanceModules}>{children}</ModulesContext.Provider>;
 };
-
-const Modules = createContainer(useModules);
-
-export default Modules;

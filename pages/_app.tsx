@@ -1,20 +1,22 @@
 import { AppProps } from 'next/app';
 import { FC } from 'react';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { DAppProvider, Config, Hardhat, ChainId, Mainnet } from '@usedapp/core';
+import { DAppProvider, Config, Hardhat, Mainnet } from '@usedapp/core';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-import '../styles/globals.css';
+import '@synthetixio/ui/dist/default.css';
+import '../styles/index.scss';
 import '../i18n';
 
-import Connector from 'containers/Connector';
-import Modules from 'containers/Modules';
-import Modal from 'containers/Modal';
+import { ConnectorContextProvider } from 'containers/Connector';
+import { ModulesProvider } from 'containers/Modules';
+import { ModalContextProvider, useModalContext } from 'containers/Modal';
 import { ThemeProvider } from 'styled-components';
-import { theme, Modal as UIModal } from '@synthetixio/ui';
+import { theme, Modal as UIModal } from 'components/old-ui';
 
 const queryClient = new QueryClient();
 
@@ -31,35 +33,37 @@ export const config: Config = {
 	multicallAddresses: {
 		[Hardhat.chainId]: '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0',
 	},
-	supportedChains: [ChainId.Hardhat, ChainId.Mainnet],
 };
 
 const InnerApp: FC<AppProps> = ({ Component, pageProps }) => {
-	const { isOpen, content } = Modal.useContainer();
+	const { isOpen, content } = useModalContext();
+
+	const TheComponent = Component as any;
+
 	return (
-		<Modules.Provider>
+		<ModulesProvider>
 			<Header />
-			{/* TODO @MF remove terniery operator when new version of UI is out */}
-			<UIModal open={isOpen} modalContent={content ? content : <span>nothing</span>}>
-				<Component {...pageProps} />
+			<UIModal open={isOpen} modalContent={content}>
+				<TheComponent {...pageProps} />
 				<Footer />
 			</UIModal>
-		</Modules.Provider>
+		</ModulesProvider>
 	);
 };
 
 const App: FC<AppProps> = (props) => {
 	return (
 		<DAppProvider config={config}>
-			<Connector.Provider>
+			<ConnectorContextProvider>
 				<QueryClientProvider client={queryClient}>
+					<ReactQueryDevtools initialIsOpen={false} />
 					<ThemeProvider theme={theme}>
-						<Modal.Provider>
+						<ModalContextProvider>
 							<InnerApp {...props} />
-						</Modal.Provider>
+						</ModalContextProvider>
 					</ThemeProvider>
 				</QueryClientProvider>
-			</Connector.Provider>
+			</ConnectorContextProvider>
 		</DAppProvider>
 	);
 };

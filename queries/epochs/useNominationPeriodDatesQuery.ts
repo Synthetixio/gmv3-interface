@@ -1,20 +1,20 @@
 import { useQuery } from 'react-query';
-import Modules from 'containers/Modules';
-import { DeployedModules } from 'containers/Modules/Modules';
+import { useModulesContext } from 'containers/Modules';
+import { DeployedModules } from 'containers/Modules';
 
 type NominationPeriodDates = {
 	nominationPeriodStartDate: number;
-	nominationPeriodEndDate?: number;
 };
 
 function useNominationPeriodDatesQuery(moduleInstance: DeployedModules) {
-	const { governanceModules } = Modules.useContainer();
+	const governanceModules = useModulesContext();
 
 	return useQuery<NominationPeriodDates>(
 		['nominationPeriodDates', moduleInstance],
 		async () => {
 			const contract = governanceModules[moduleInstance]?.contract;
-			let nominationPeriodStartDate = Number(await contract?.getNominationPeriodStartDate()) * 1000;
+			const nominationPeriodStartDate =
+				Number(await contract?.getNominationPeriodStartDate()) * 1000;
 			return { nominationPeriodStartDate };
 		},
 		{

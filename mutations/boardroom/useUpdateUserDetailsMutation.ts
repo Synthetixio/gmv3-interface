@@ -1,5 +1,5 @@
 import { UPDATE_USER_DETAILS_API_URL } from 'constants/boardroom';
-import Connector from 'containers/Connector';
+import { useConnectorContext } from 'containers/Connector';
 import useIsUUIDValidQuery from 'queries/boardroom/useIsUUIDValidQuery';
 import { GetUserDetails } from 'queries/boardroom/useUserDetailsQuery';
 import { useMutation, useQueryClient } from 'react-query';
@@ -11,7 +11,7 @@ type UpdateUserDetailsResponse = {
 };
 
 function useUpdateUserDetailsMutation() {
-	const { walletAddress, uuid, boardroomSignIn } = Connector.useContainer();
+	const { walletAddress, uuid, boardroomSignIn } = useConnectorContext();
 	const isUuidValidQuery = useIsUUIDValidQuery();
 	const queryClient = useQueryClient();
 
@@ -22,13 +22,6 @@ function useUpdateUserDetailsMutation() {
 				return await boardroomSignIn();
 			} else {
 				if (walletAddress) {
-					delete userProfile.address;
-
-					//@TODO: add this
-					userProfile.notificationPreferences = '';
-					// @TODO: will be remove
-					userProfile.email = '';
-
 					const body = {
 						...userProfile,
 						uuid: uuid,

@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query';
-import Modules from 'containers/Modules';
-import { DeployedModules } from 'containers/Modules/Modules';
+import { useModulesContext } from 'containers/Modules';
+import { DeployedModules } from 'containers/Modules';
 
 function useIsNominated(moduleInstance: DeployedModules, walletAddress: string) {
-	const { governanceModules } = Modules.useContainer();
+	const governanceModules = useModulesContext();
 
 	return useQuery<boolean>(
 		['isNominated', moduleInstance, walletAddress],
@@ -14,6 +14,7 @@ function useIsNominated(moduleInstance: DeployedModules, walletAddress: string) 
 		},
 		{
 			enabled: governanceModules !== null && moduleInstance !== null && walletAddress !== null,
+			cacheTime: 60 * 60 * 15,
 		}
 	);
 }

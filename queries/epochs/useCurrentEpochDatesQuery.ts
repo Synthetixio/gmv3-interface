@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import Modules from 'containers/Modules';
-import { DeployedModules } from 'containers/Modules/Modules';
+import { useModulesContext } from 'containers/Modules';
+import { DeployedModules } from 'containers/Modules';
 
 type EpochDates = {
 	epochStartDate: number;
@@ -8,14 +8,14 @@ type EpochDates = {
 };
 
 function useCurrentEpochDatesQuery(moduleInstance: DeployedModules) {
-	const { governanceModules } = Modules.useContainer();
+	const governanceModules = useModulesContext();
 
 	return useQuery<EpochDates>(
 		['currentEpochDates', moduleInstance],
 		async () => {
 			const contract = governanceModules[moduleInstance]?.contract;
-			let epochStartDate = Number(await contract?.getEpochStartDate()) * 1000;
-			let epochEndDate = Number(await contract?.getEpochEndDate()) * 1000;
+			const epochStartDate = Number(await contract?.getEpochStartDate()) * 1000;
+			const epochEndDate = Number(await contract?.getEpochEndDate()) * 1000;
 			return { epochStartDate, epochEndDate };
 		},
 		{
