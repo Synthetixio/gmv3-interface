@@ -17,6 +17,7 @@ import { BigNumber, utils } from 'ethers';
 import { useConnectorContext } from 'containers/Connector';
 import { ConnectButton } from 'components/ConnectButton';
 import Wei from '@synthetixio/wei';
+import { useMultipleCast } from 'mutations/voting/useMultipleCast';
 
 interface VoteModalProps {
 	member: Pick<GetUserDetails, 'address' | 'ens' | 'pfpThumbnailUrl' | 'about'>;
@@ -33,6 +34,7 @@ export default function VoteModal({ member, deployedModule, council }: VoteModal
 	const { push } = useRouter();
 	const queryClient = useQueryClient();
 	const castVoteMutation = useCastMutation(deployedModule);
+	const cast = useMultipleCast();
 	const { setVisible, setContent, state, setTxHash, visible, setState } =
 		useTransactionModalContext();
 	useEffect(() => {
@@ -93,7 +95,8 @@ export default function VoteModal({ member, deployedModule, council }: VoteModal
 					<h3 className="tg-title-h3">{member.ens || truncateAddress(member.address)}</h3>
 				</>
 			);
-			const tx = await castVoteMutation.mutateAsync([member.address]);
+			const tx = await cast.cast();
+			// const tx = await castVoteMutation.mutateAsync([member.address]);
 			setTxHash(tx.hash);
 		} catch (error) {
 			console.error(error);
