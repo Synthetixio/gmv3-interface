@@ -30,7 +30,7 @@ type UserPitch = {
 	protocol: string;
 };
 
-function useUserDetailsQuery(walletAddress: string) {
+function useUserDetailsQuery(walletAddress: string | undefined | null) {
 	return useQuery<GetUserDetails | undefined>(
 		['userDetails', walletAddress],
 		async () => {

@@ -1,8 +1,15 @@
 import { Icon, IconButton } from '@synthetixio/ui';
+import clsx from 'clsx';
 import { useModalContext } from 'containers/Modal';
-import { PropsWithChildren, useEffect } from 'react';
+import React, { PropsWithChildren, useEffect, ReactNode } from 'react';
 
-export default function BaseModal({ children, headline }: PropsWithChildren<{ headline: string }>) {
+interface BaseModalProps {
+	children: ReactNode;
+	headline: ReactNode;
+	className?: string;
+}
+
+export default function BaseModal({ children, headline, className }: BaseModalProps) {
 	const { setIsOpen, isOpen } = useModalContext();
 
 	useEffect(() => {
@@ -17,7 +24,12 @@ export default function BaseModal({ children, headline }: PropsWithChildren<{ he
 			className="bg-purple p-0.5 rounded-t-[2rem] relative container"
 			style={{ height: 'calc(100vh - 30px)' }}
 		>
-			<div className="flex flex-col items-center darker-60 rounded-t-[2rem] overflow-auto h-full w-full pt-12 pb-4">
+			<div
+				className={clsx(
+					'flex flex-col items-center darker-60 rounded-t-[2rem] overflow-auto h-full w-full pt-12 pb-4',
+					className
+				)}
+			>
 				<IconButton
 					className="top-5 right-5 absolute"
 					onClick={() => {

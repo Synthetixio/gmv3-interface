@@ -20,6 +20,7 @@ import { TransactionDialogContextProvider } from '@synthetixio/ui';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'components/Modals/Modal';
+import { ApplicationContextProvider } from 'containers/Application';
 
 const queryClient = new QueryClient();
 
@@ -30,14 +31,16 @@ const InnerApp: FC<AppProps> = ({ Component, pageProps }) => {
 
 	return (
 		<ModulesProvider>
-			<TransactionDialogContextProvider provider={signer?.provider || L2DefaultProvider}>
-				<Modal open={isOpen} modalContent={content}>
-					<Header />
-					<TheComponent {...pageProps} />
-					<Footer />
-				</Modal>
-			</TransactionDialogContextProvider>
-			<ToastContainer theme="dark" />
+			<ApplicationContextProvider>
+				<TransactionDialogContextProvider provider={signer?.provider || L2DefaultProvider}>
+					<Modal open={isOpen} modalContent={content}>
+						<Header />
+						<TheComponent {...pageProps} />
+						<Footer />
+					</Modal>
+				</TransactionDialogContextProvider>
+				<ToastContainer theme="dark" />
+			</ApplicationContextProvider>
 		</ModulesProvider>
 	);
 };

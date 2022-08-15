@@ -247,6 +247,7 @@
 			"submit": "Submit Vote",
 			"profile": "See full profile",
 			"cta": "Voting for {{council}} Council",
+			"ctaAll": "Voting for:",
 			"voting-power": {
 				"headline": "Your Total Voting Power Is On L1 & L2:"
 			}

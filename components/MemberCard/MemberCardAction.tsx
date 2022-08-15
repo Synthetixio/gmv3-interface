@@ -4,7 +4,6 @@ import { useModalContext } from 'containers/Modal';
 import { useRouter } from 'next/router';
 import { GetUserDetails } from 'queries/boardroom/useUserDetailsQuery';
 import { useTranslation } from 'react-i18next';
-import VoteModal from 'components/Modals/Vote';
 import { Button, IconButton, Dropdown, Icon } from '@synthetixio/ui';
 import Link from 'next/link';
 import { EpochPeriods } from 'queries/epochs/useCurrentPeriodQuery';
@@ -12,6 +11,7 @@ import { DeployedModules } from 'containers/Modules';
 import WithdrawVoteModal from 'components/Modals/WithdrawVote';
 import { compareAddress } from 'utils/helpers';
 import clsx from 'clsx';
+import { useApplicationContext } from 'containers/Application';
 
 interface Props {
 	state: keyof typeof EpochPeriods;
@@ -36,6 +36,7 @@ export const MemberCardAction: React.FC<Props> = ({
 	const { push } = useRouter();
 	const { setContent, setIsOpen } = useModalContext();
 	const votedForAlready = compareAddress(votedFor, walletAddress);
+	const { vote } = useApplicationContext();
 
 	return (
 		<>
@@ -145,12 +146,10 @@ export const MemberCardAction: React.FC<Props> = ({
 										deployedModule={deployedModule!}
 									/>
 								);
-							} else {
-								setContent(
-									<VoteModal member={member} deployedModule={deployedModule!} council={council!} />
-								);
+								setIsOpen(true);
+							} else if (deployedModule) {
+								vote(member.address, deployedModule);
 							}
-							setIsOpen(true);
 						}}
 					>
 						{votedForAlready ? t('vote.withdraw') : t('vote.vote-nominee')}

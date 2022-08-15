@@ -22,7 +22,7 @@ export const useMulticall = () => {
 				callFunc: string | undefined,
 				callArgs: any[] | undefined;
 
-			if (calls.length === 0) {
+			if (calls.length === 1) {
 				[callContract, callFunc, callArgs] = calls[0];
 				const tx = await callContract[callFunc](...callArgs);
 				return tx;
@@ -39,7 +39,7 @@ export const useMulticall = () => {
 					}),
 				];
 				const tx = await multicall.aggregate3Value(...args, { gasLimit: 10000000 });
-				
+
 				return tx;
 			}
 		},
