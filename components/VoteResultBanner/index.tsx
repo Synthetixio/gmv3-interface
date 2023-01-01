@@ -10,7 +10,15 @@ export const VoteResultBanner: React.FC = () => {
 	const { t } = useTranslation();
 	const periodsData = useCurrentPeriods();
 
-	if (periodsData.find((periodData) => periodData.data?.currentPeriod !== 'VOTING')) return null;
+	if (
+		periodsData.find(
+			(periodData) =>
+				periodData.data?.currentPeriod !== 'VOTING' &&
+				periodData.data?.currentPeriod !== 'EVALUATION'
+		)
+	) {
+		return null;
+	}
 
 	return (
 		<div className="w-full p-0.5 bg-purple rounded mx-auto">

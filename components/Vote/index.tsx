@@ -23,7 +23,8 @@ export default function VoteSection() {
 	useEffect(() => {
 		if (!isLoading) {
 			const numberOfCouncilInVoting = periodsData.filter(
-				(period) => period.data?.currentPeriod === 'VOTING'
+				(period) =>
+					period.data?.currentPeriod === 'VOTING' || period.data?.currentPeriod === 'EVALUATION'
 			).length;
 			if (numberOfCouncilInVoting === 0) {
 				push('/');
